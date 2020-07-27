@@ -1,0 +1,35 @@
+name: Production
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Deploy application to production environment
+        env:
+          HEROKU_APP_NAME: bo-portfolio-admin
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+          heroku version
+          heroku container:login
+          heroku container:push web -a $HEROKU_APP_NAME
+          heroku container:release web -a $HEROKU_APP_NAME
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Create a new Github release
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          REPO_OWNER: bjoberg
+        run: |
+          ./scripts/release.sh -v $(node -pe "require('./package.json').version")
