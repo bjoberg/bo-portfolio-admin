@@ -21,15 +21,3 @@ jobs:
           heroku container:login
           heroku container:push web -a $HEROKU_APP_NAME
           heroku container:release web -a $HEROKU_APP_NAME
-
-  release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v1
-      - name: Create a new Github release
-        env:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          REPO_OWNER: bjoberg
-        run: |
-          ./scripts/release.sh -v $(node -pe "require('./package.json').version")
