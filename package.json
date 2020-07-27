@@ -98,7 +98,7 @@
     "@types/webpack-hot-middleware": "^2.16.5",
     "@typescript-eslint/eslint-plugin": "1.6.0",
     "@typescript-eslint/parser": "1.6.0",
-    "acorn": "^7.1.0",
+    "acorn": "^7.1.1",
     "babel-core": "^6.26.3",
     "babel-eslint": "10.0.1",
     "babel-loader": "^8.0.6",
