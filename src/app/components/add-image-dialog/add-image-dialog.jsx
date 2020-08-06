@@ -1,5 +1,11 @@
+import * as dateFns from 'date-fns';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import {
   Grid,
   Dialog,
@@ -17,6 +23,7 @@ import {
   defaultTitle,
   defaultThumbnailUrl,
   defaultImageUrl,
+  defaultCaptureDate,
   defaultDescription,
   defaultWidth,
   defaultHeight,
@@ -37,6 +44,7 @@ const AddImageDialog = (props) => {
   const [title, setTitle] = useState(defaultTitle);
   const [thumbnailUrl, setThumbnailUrl] = useState(defaultThumbnailUrl);
   const [imageUrl, setImageUrl] = useState(defaultImageUrl);
+  const [captureDate, setCaptureDate] = useState(defaultCaptureDate);
   const [width, setWidth] = useState(defaultWidth);
   const [height, setHeight] = useState(defaultHeight);
   const [location, setLocation] = useState(defaultLocation);
@@ -61,6 +69,13 @@ const AddImageDialog = (props) => {
   };
   const updateImageUrlError = (hasError, helperText) => {
     setImageUrl({ ...imageUrl, hasError, helperText });
+  };
+
+  const updateCaptureDate = (e) => {
+    setCaptureDate({ ...captureDate, value: e });
+  };
+  const updateCaptureDateError = (hasError, helperText) => {
+    setCaptureDate({ ...captureDate, hasError, helperText });
   };
 
   const updateLocation = (e) => {
@@ -168,6 +183,29 @@ const AddImageDialog = (props) => {
   };
 
   /**
+   * Check to see if the image's capture date value is valid
+   */
+  const isValidCaptureDate = () => {
+    const input = captureDate.value;
+
+    // Capture date is required, so it cannot be empty
+    if (!isNotEmpty(input)) {
+      updateCaptureDateError(true, 'Capture date is required');
+      return false;
+    }
+
+    // Capture date cannot be in the future
+    const isAfterToday = dateFns.isAfter(captureDate.value, Date.now());
+    if (isAfterToday) {
+      updateCaptureDateError(true, 'Capture date cannot be in the future');
+      return false;
+    }
+
+    updateCaptureDateError(false, '');
+    return true;
+  };
+
+  /**
    * Check to see if the image's location value is valid
    */
   const isValidLocation = () => {
@@ -261,6 +299,7 @@ const AddImageDialog = (props) => {
     if (!isValidTitle()) isValid = false;
     if (!isValidThumbnailUrl()) isValid = false;
     if (!isValidImageUrl()) isValid = false;
+    if (!isValidCaptureDate()) isValid = false;
     if (!isValidLocation()) isValid = false;
     if (!isValidWidth()) isValid = false;
     if (!isValidHeight()) isValid = false;
@@ -338,7 +377,7 @@ const AddImageDialog = (props) => {
           id="title"
           label="Title"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           fullWidth
           disabled={formIsLoading}
           value={title.value}
@@ -351,7 +390,7 @@ const AddImageDialog = (props) => {
           id="thumbnailUrl"
           label="Thumbnail Url"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           fullWidth
           disabled={formIsLoading}
           value={thumbnailUrl.value}
@@ -364,7 +403,7 @@ const AddImageDialog = (props) => {
           id="imageUrl"
           label="Image Url"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           fullWidth
           disabled={formIsLoading}
           value={imageUrl.value}
@@ -373,11 +412,31 @@ const AddImageDialog = (props) => {
           helperText={imageUrl.helperText}
           onChange={e => updateImageUrl(e)}
         />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            id="capture-date"
+            label="Capture Date"
+            margin="normal"
+            variant="inline"
+            format="MM/dd/yyyy"
+            disableToolbar
+            fullWidth
+            disabled={formIsLoading}
+            value={captureDate.value}
+            required={captureDate.isRequired}
+            error={captureDate.hasError}
+            helperText={captureDate.helperText}
+            onChange={updateCaptureDate}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+        </MuiPickersUtilsProvider>
         <TextField
           id="location"
           label="Location"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           fullWidth
           disabled={formIsLoading}
           value={location.value}
@@ -390,7 +449,7 @@ const AddImageDialog = (props) => {
           id="width"
           label="Width"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           disabled
           fullWidth
           value={width.value}
@@ -402,7 +461,7 @@ const AddImageDialog = (props) => {
           id="height"
           label="Height"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           disabled
           fullWidth
           value={height.value}
@@ -415,7 +474,7 @@ const AddImageDialog = (props) => {
           id="description"
           label="Description"
           margin="normal"
-          variant="outlined"
+          variant="standard"
           fullWidth
           disabled={formIsLoading}
           rows="4"
