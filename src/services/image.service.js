@@ -218,6 +218,7 @@ export default class ImageService {
           imageUrl: image.imageUrl,
           title: image.title,
           description: image.description,
+          captureDate: image.captureDate,
           location: image.location,
           width: image.width,
           height: image.height,

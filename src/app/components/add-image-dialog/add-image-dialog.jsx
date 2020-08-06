@@ -319,10 +319,14 @@ const AddImageDialog = (props) => {
           description: description.value,
           thumbnailUrl: thumbnailUrl.value,
           imageUrl: imageUrl.value,
+          captureDate: captureDate.value,
           location: location.value,
           width: width.value,
           height: height.value,
         };
+
+        // TODO: Format the captureDate so it only contains the date... no time
+
         await imageService.createImage(image);
         resetForm();
         handleClose();
