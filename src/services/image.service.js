@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import HttpMethods from '../models/http-methods';
-import { createNewApiError } from './service-helpers';
+import { createNewApiError, formatCaptureDate } from './service-helpers';
 
 export default class ImageService {
   constructor() {
@@ -218,6 +218,7 @@ export default class ImageService {
           imageUrl: image.imageUrl,
           title: image.title,
           description: image.description,
+          captureDate: formatCaptureDate(image.captureDate),
           location: image.location,
           width: image.width,
           height: image.height,
