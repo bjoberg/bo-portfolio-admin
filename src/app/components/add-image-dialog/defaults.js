@@ -19,6 +19,13 @@ const defaultImageUrl = {
   value: '',
 };
 
+const defaultCaptureDate = {
+  hasError: false,
+  isRequired: true,
+  helperText: '',
+  value: new Date(),
+};
+
 const defaultLocation = {
   hasError: false,
   isRequired: false,
@@ -51,6 +58,7 @@ export {
   defaultTitle,
   defaultThumbnailUrl,
   defaultImageUrl,
+  defaultCaptureDate,
   defaultLocation,
   defaultWidth,
   defaultHeight,
