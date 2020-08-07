@@ -41,5 +41,4 @@ const createNewApiError = (error, defaultStatusCode, defaultMessage) => {
   return new ApiError(status, message);
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export { createNewApiError, formatCaptureDate };
